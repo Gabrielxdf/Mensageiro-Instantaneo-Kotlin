@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <EditText
+        android:id="@+id/campo_email_login"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/campo_arredondado_login_registro"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/campo_senha_login"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/campo_arredondado_login_registro"        android:ems="10"
+        android:hint="@string/senha"
+        android:inputType="textPassword"
+        android:paddingLeft="15dp"
+        app:layout_constraintEnd_toEndOf="@+id/campo_email_login"
+        app:layout_constraintStart_toStartOf="@+id/campo_email_login"
+        app:layout_constraintTop_toBottomOf="@+id/campo_email_login" />
+
+    <Button
+        android:id="@+id/botao_login"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/login"
+        android:background="@drawable/campo_arredondado_login_registro"
+        app:layout_constraintEnd_toEndOf="@+id/campo_senha_login"
+        app:layout_constraintStart_toStartOf="@+id/campo_senha_login"
+        app:layout_constraintTop_toBottomOf="@+id/campo_senha_login" />
+
+    <TextView
+        android:id="@+id/campo_voltar_registro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/voltar_registro"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/botao_login"
+        app:layout_constraintStart_toStartOf="@+id/botao_login"
+        app:layout_constraintTop_toBottomOf="@+id/botao_login" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MensageiroInstantaneo</string>
+    <string name="usuario">Usuário</string>
+    <string name="email">E-mail</string>
+    <string name="senha">Senha</string>
+    <string name="registro">Registre-se</string>
+    <string name="login">Login</string>
+    <string name="conta">Já possui uma conta?</string>
+    <string name="voltar_registro">Voltar para a tela de registro</string>
+    <string name="escolha_foto">Escolha uma foto</string>
+</resources>

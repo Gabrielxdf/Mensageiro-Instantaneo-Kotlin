@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1057101168563",
+    "project_id": "mensageiroinstantaneo",
+    "storage_bucket": "mensageiroinstantaneo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057101168563:android:48790b4543619dc6ca55c6",
+        "android_client_info": {
+          "package_name": "com.example.mensageiroinstantaneo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057101168563-ejbd78ik3pa319tbhaatakjgr7nna4nh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYjO7zYEulD1xwitCHMUcoSz5V7LDEFhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057101168563-ejbd78ik3pa319tbhaatakjgr7nna4nh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
