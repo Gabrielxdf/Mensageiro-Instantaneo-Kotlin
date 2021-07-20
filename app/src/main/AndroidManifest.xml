@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MensageiroInstantaneo">
         <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".RegistroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

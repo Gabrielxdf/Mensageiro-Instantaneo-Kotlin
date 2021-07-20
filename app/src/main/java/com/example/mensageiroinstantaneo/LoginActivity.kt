@@ -27,8 +27,27 @@ class LoginActivity : Utils() {
     }
 
     private fun login() {
-        val email = findViewById<EditText>(R.id.campo_email_login).text.toString().trim()
-        val senha = findViewById<EditText>(R.id.campo_senha_login).text.toString()
+        val campoEmail = findViewById<EditText>(R.id.campo_email_login)
+        val campoSenha = findViewById<EditText>(R.id.campo_senha_login)
+
+        val email = campoEmail.text.toString().trim()
+        val senha = campoSenha.text.toString().trim()
+
+        //Fazendo validações
+        var flag = false
+        if (email.isEmpty()) {
+            campoEmail.error = "Entre com um e-mail"
+            campoEmail.requestFocus()
+            flag = true
+        }
+        if (senha.isEmpty()) {
+            campoSenha.error = "Entre com uma senha"
+            campoSenha.requestFocus()
+            flag = true
+        }
+        if(flag){
+            return
+        }
 
         //Fazendo o login do usuário no Firebase
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha)

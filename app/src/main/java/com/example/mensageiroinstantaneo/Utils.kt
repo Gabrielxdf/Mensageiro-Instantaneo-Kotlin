@@ -6,11 +6,12 @@ import com.google.firebase.auth.FirebaseAuthException
 
 open class Utils : AppCompatActivity() {
 
-    //Para um toast mais rápido
+    //Facilitar toast
     fun toast(mensagem: String?, length: Int = Toast.LENGTH_LONG) {
         Toast.makeText(this, mensagem, length).show()
     }
 
+    //Traduzir os erros do Firebase para português
     fun traduz_erro(errorCode: FirebaseAuthException): String? {
 
         val retorno = when (errorCode.errorCode) {
