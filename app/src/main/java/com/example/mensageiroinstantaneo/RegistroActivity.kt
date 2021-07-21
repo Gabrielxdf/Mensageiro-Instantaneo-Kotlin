@@ -2,7 +2,6 @@ package com.example.mensageiroinstantaneo
 
 import android.content.Intent
 import android.graphics.ImageDecoder
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,11 +13,15 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
+import java.util.*
 
 class RegistroActivity : Utils() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_registro)
 
         val botao = findViewById<Button>(R.id.botao_registro)
         val possuiConta = findViewById<TextView>(R.id.campo_ja_tem_conta)
@@ -29,7 +32,7 @@ class RegistroActivity : Utils() {
         }
 
         possuiConta.setOnClickListener {
-            Log.d("RegistroActivity", "Teste do campo: já possui uma conta")
+            Log.d("Registro", "Teste do campo: já possui uma conta")
             //Inicia a LoginActivity
             startActivity(Intent(this, LoginActivity::class.java))
         }
@@ -37,33 +40,29 @@ class RegistroActivity : Utils() {
         //Para selecionar a foto do usuário
         val getImage = registerForActivityResult(ActivityResultContracts.GetContent())
         { uri: Uri? ->
-            // Handle the returned Uri
-
+            fotoUri = uri
             //Usa o ImageDecoder se a API level for 28+, se não, usa o método descontinuado.
             val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.createSource(contentResolver, uri!!)
+                ImageDecoder.createSource(contentResolver, fotoUri!!)
             } else {
-                MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                MediaStore.Images.Media.getBitmap(contentResolver, fotoUri)
                 TODO("VERSION.SDK_INT < P")
             }
-            botao_foto.background = ImageDecoder.decodeDrawable(bitmap)
-            TODO("Ajustar a imagem ao botão")
 
-            Log.d("Main", "${uri.toString()}")
+            //Pondo a imagem no botão 3rd party para a imagem ficar redonda
+            val botao_imageview = findViewById<CircleImageView>(R.id.botao_circle_imageview)
+            botao_imageview.setImageBitmap(ImageDecoder.decodeBitmap(bitmap))
+            botao_foto.alpha = 0f
+            //botao_foto.background = ImageDecoder.decodeDrawable(bitmap)
         }
 
         botao_foto.setOnClickListener {
             getImage.launch("image/*")
 
-            //Método descontinuado
-            //val intent = Intent(Intent.ACTION_PICK)
-            //intent.type = "image/*"
-            //startActivityForResult(intent, 0)
-            //Depois sobreescrever a função onActivityResult
-
         }
 
     }
+    var fotoUri : Uri? = null
 
     private fun registra() {
         val campoUsuario = findViewById<EditText>(R.id.campo_usuario_registro)
@@ -102,18 +101,53 @@ class RegistroActivity : Utils() {
                     try {
                         throw it.exception!!
                     } catch (e: FirebaseAuthException) {
-                        Log.d("RegistroActivity", "Falha ao criar o usuário: ${traduz_erro(e)}")
+                        Log.d("Registro", "Falha ao criar o usuário: ${traduz_erro(e)}")
                         toast(traduz_erro(e))
                     } finally {
                         return@addOnCompleteListener
                     }
                 } else {
-                    //else if isSuccessful
+                    toast("Registrado com sucesso!")
                     Log.d(
-                        "RegistroActivity", "Criado o \n Usuário: $usuario \n " +
+                        "Registro", "Criado o \n Usuário: $usuario \n " +
                                 "E-mail: $email \n Senha: $senha \n uid: ${it.result?.user?.uid}"
                     )
+                    salvarImagem(usuario)
                 }
             }
     }
+
+    private fun salvarImagem(usuario : String){
+        if (fotoUri == null) return
+        val filename = UUID.randomUUID().toString()
+        val storage = FirebaseStorage.getInstance().getReference("/imagens/$filename")
+        storage.putFile(fotoUri!!)
+            .addOnSuccessListener {
+                Log.d("Registro", "Fez o upload da imagem com sucesso: ${it.metadata?.path}")
+                storage.downloadUrl.addOnSuccessListener {
+                    Log.d("Registro", "Localização do arquivo: $it")
+                    salvarUsuario(usuario, it.toString())
+                }
+            }
+            .addOnFailureListener{
+                Log.d("Registro", "Falha ao salvar imagem: ${it.message}")
+            }
+    }
+
+    private fun salvarUsuario(usuario : String, urlImagem : String){
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val database = FirebaseDatabase.getInstance().getReference("/usuarios/$uid")
+        //val campoUsuario = findViewById<EditText>(R.id.campo_usuario_registro).text.toString().trim()
+        val usuarioDto = UsuarioDTO(uid, usuario, urlImagem)
+        //salvando os dados do usuário
+        database.setValue(usuarioDto)
+            .addOnSuccessListener {
+                //o usuario pode digitar algo no campo de usuario dps
+                Log.d("Registro", "O usuário foi salvo no Database do Firebase")
+            }
+            .addOnFailureListener {
+                Log.d("Registro", "Falha ao salvar o usuário: ${it.message}")
+            }
+    }
 }
+class UsuarioDTO(val uid: String, val username : String, val fotoPerfil : String)

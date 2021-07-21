@@ -82,11 +82,23 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="32dp"
-        app:backgroundTint="@null"
         android:background="@drawable/botao_redondo"
         android:text="@string/escolha_foto"
+        app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/botao_circle_imageview"
+        app:civ_border_width="4dp"
+        app:civ_border_color="@color/roxo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="@+id/botao_foto_registro"
+        app:layout_constraintEnd_toEndOf="@+id/botao_foto_registro"
+        app:layout_constraintStart_toStartOf="@+id/botao_foto_registro"
+        app:layout_constraintTop_toTopOf="@+id/botao_foto_registro" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

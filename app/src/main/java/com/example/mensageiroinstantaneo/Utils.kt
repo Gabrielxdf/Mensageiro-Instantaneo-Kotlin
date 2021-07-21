@@ -28,7 +28,7 @@ open class Utils : AppCompatActivity() {
             "ERROR_WEAK_PASSWORD" ->
                 "A senha é muito fraca."
             "ERROR_EMAIL_ALREADY_IN_USE" ->
-                "Já existi uma conta com o endereço de email fornecido."
+                "Já existe uma conta com o endereço de email fornecido."
             "ERROR_INVALID_EMAIL" ->
                 "O endereço de e-mail não é válido."
             "ERROR_OPERATION_NOT_ALLOWED" ->
