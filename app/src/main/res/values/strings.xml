@@ -8,4 +8,6 @@
     <string name="conta">Já possui uma conta?</string>
     <string name="voltar_registro">Voltar para a tela de registro</string>
     <string name="escolha_foto">Escolha uma foto</string>
+    <string name="title_activity_nova_mensagem">NovaMensagemActivity</string>
+
 </resources>

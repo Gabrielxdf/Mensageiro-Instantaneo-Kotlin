@@ -19,6 +19,10 @@ import de.hdodenhof.circleimageview.CircleImageView
 import java.util.*
 
 class RegistroActivity : Utils() {
+    lateinit var campoUsuario : EditText
+    lateinit var usuario : String
+    var fotoUri : Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
@@ -43,7 +47,11 @@ class RegistroActivity : Utils() {
             fotoUri = uri
             //Usa o ImageDecoder se a API level for 28+, se não, usa o método descontinuado.
             val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.createSource(contentResolver, fotoUri!!)
+                if (fotoUri == null){
+                    return@registerForActivityResult
+                }else{
+                    ImageDecoder.createSource(contentResolver, fotoUri!!)
+                }
             } else {
                 MediaStore.Images.Media.getBitmap(contentResolver, fotoUri)
                 TODO("VERSION.SDK_INT < P")
@@ -62,14 +70,13 @@ class RegistroActivity : Utils() {
         }
 
     }
-    var fotoUri : Uri? = null
 
     private fun registra() {
-        val campoUsuario = findViewById<EditText>(R.id.campo_usuario_registro)
+        campoUsuario = findViewById<EditText>(R.id.campo_usuario_registro)
         val campoEmail = findViewById<EditText>(R.id.campo_email_registro)
         val campoSenha = findViewById<EditText>(R.id.campo_senha_registro)
 
-        val usuario = campoUsuario.text.toString().trim()
+        usuario = campoUsuario.text.toString().trim()
         val email = campoEmail.text.toString().trim()
         val senha = campoSenha.text.toString().trim()
 
@@ -126,7 +133,7 @@ class RegistroActivity : Utils() {
                 Log.d("Registro", "Fez o upload da imagem com sucesso: ${it.metadata?.path}")
                 storage.downloadUrl.addOnSuccessListener {
                     Log.d("Registro", "Localização do arquivo: $it")
-                    salvarUsuario(usuario, it.toString())
+                    salvarUsuario(it.toString())
                 }
             }
             .addOnFailureListener{
@@ -134,20 +141,25 @@ class RegistroActivity : Utils() {
             }
     }
 
-    private fun salvarUsuario(usuario : String, urlImagem : String){
+    private fun salvarUsuario(urlImagem : String){
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val database = FirebaseDatabase.getInstance().getReference("/usuarios/$uid")
-        //val campoUsuario = findViewById<EditText>(R.id.campo_usuario_registro).text.toString().trim()
         val usuarioDto = UsuarioDTO(uid, usuario, urlImagem)
         //salvando os dados do usuário
         database.setValue(usuarioDto)
             .addOnSuccessListener {
                 //o usuario pode digitar algo no campo de usuario dps
                 Log.d("Registro", "O usuário foi salvo no Database do Firebase")
+
+                val intent = Intent(this, UltimasMensagensActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
             .addOnFailureListener {
                 Log.d("Registro", "Falha ao salvar o usuário: ${it.message}")
             }
     }
 }
-class UsuarioDTO(val uid: String, val username : String, val fotoPerfil : String)
+class UsuarioDTO(val uid: String, val username : String, val fotoPerfil : String){
+    constructor() : this("","","")
+}

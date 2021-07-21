@@ -9,11 +9,21 @@
         <item name="colorSecondary">@color/roxo_secundario</item>
         <item name="colorSecondaryVariant">@color/roxo_secundario_escuro</item>
         <item name="colorOnSecondary">@color/white</item>
-
         <item name="android:windowBackground">?android:attr/colorActivatedHighlight</item>
+
+        <item name="android:navigationBarColor">@color/roxo_escuro</item>
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.MensageiroInstantaneo.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MensageiroInstantaneo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MensageiroInstantaneo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
