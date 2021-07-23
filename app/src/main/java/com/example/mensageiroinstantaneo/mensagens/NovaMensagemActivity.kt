@@ -38,7 +38,7 @@ class NovaMensagemActivity : AppCompatActivity() {
         database.addListenerForSingleValueEvent(object: ValueEventListener{
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                recycler = findViewById<RecyclerView>(R.id.recyclerview_usuarios)
+                recycler = findViewById(R.id.recyclerview_usuarios)
                 val adapter = GroupieAdapter()
                 snapshot.children.forEach {
                     val user = it.getValue(UsuarioDTO::class.java)

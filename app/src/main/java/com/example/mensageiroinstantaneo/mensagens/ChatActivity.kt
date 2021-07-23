@@ -22,19 +22,20 @@ import com.xwray.groupie.Item
 
 class ChatActivity : Utils() {
     lateinit var campoMensagem : EditText
-    lateinit var usuario : UsuarioDTO
+    lateinit var usuarioEscolhido : UsuarioDTO
     lateinit var usuarioLogadoId : String
     lateinit var recycler : RecyclerView
     val adapter = GroupieAdapter()
+    val usuarioAtual = UltimasMensagensActivity.usuarioAtual
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-        recycler = findViewById<RecyclerView>(R.id.recycler_chat)
+        recycler = findViewById(R.id.recycler_chat)
         usuarioLogadoId = FirebaseAuth.getInstance().uid.toString()
-        usuario = intent.getParcelableExtra(NovaMensagemActivity.USER_KEY)!!
-        if (usuario != null) {
-            supportActionBar?.title = usuario!!.username
+        usuarioEscolhido = intent.getParcelableExtra(NovaMensagemActivity.USER_KEY)!!
+        if (usuarioEscolhido != null) {
+            supportActionBar?.title = usuarioEscolhido!!.username
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -53,9 +54,9 @@ class ChatActivity : Utils() {
                 val mensagemChat = snapshot.getValue(ChatDTO::class.java)
                 if (mensagemChat != null) {
                     if(mensagemChat.fromId == FirebaseAuth.getInstance().uid){
-                        adapter.add(ItemChatDireita(mensagemChat.text))
+                        adapter.add(ItemChatDireita(mensagemChat.text, usuarioAtual))
                     }else{
-                    adapter.add(ItemChatEsquerda(mensagemChat.text))
+                    adapter.add(ItemChatEsquerda(mensagemChat.text, usuarioEscolhido.fotoPerfil))
                     }
                 }
                 recycler.adapter = adapter
@@ -86,37 +87,40 @@ class ChatActivity : Utils() {
         if(mensagem.replace("\\s/g".toRegex(), "").length == 0){
             return
         }
-        if(usuarioLogadoId == null && usuario.uid == null ) {
+        if(usuarioLogadoId == null && usuarioEscolhido.uid == null ) {
             toast("Não foi possível enviar essa mensagem. \n Tente novamente mais tarde.")
             return
         }
         val database = FirebaseDatabase.getInstance().getReference("/mensagens").push()
-        val chatDto = ChatDTO(database.key, mensagem, usuarioLogadoId, usuario.uid, System.currentTimeMillis() / 1000)
+        val chatDto = ChatDTO(database.key, mensagem, usuarioLogadoId, usuarioEscolhido.uid, System.currentTimeMillis() / 1000)
         database.setValue(chatDto)
         campoMensagem.text.clear()
     }
 }
 
-class ItemChatEsquerda(val text : String) : Item<GroupieViewHolder>(){
+class ItemChatEsquerda(val text : String, val url : String) : Item<GroupieViewHolder>(){
     override fun getLayout(): Int {
         return R.layout.linha_chat_esquerda
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.findViewById<TextView>(R.id.campo_linha_esquerda).text = text
-        Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/mensageiroinstantaneo.appspot.com/o/imagens%2F2e7dfd01-6cf5-4be3-96f6-8c792e08a8af?alt=media&token=7078b144-5e34-4fe5-a3e3-22b1b6352cef")
+        Picasso.get().load(url)
             .into(viewHolder.itemView.findViewById<ImageView>(R.id.foto_chat_esquerda))
     }
 
 }
 
-class ItemChatDireita(val text : String) : Item<GroupieViewHolder>(){
+class ItemChatDireita(val text : String, val usuario : UsuarioDTO) : Item<GroupieViewHolder>(){
     override fun getLayout(): Int {
         return R.layout.linha_chat_direita
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.findViewById<TextView>(R.id.campo_linha_direita).text = text
+        val url = usuario.fotoPerfil
+        Picasso.get().load(url)
+            .into(viewHolder.itemView.findViewById<ImageView>(R.id.foto_chat_direita))
     }
 
 }
