@@ -1,4 +1,4 @@
-package com.example.mensageiroinstantaneo
+package com.example.mensageiroinstantaneo.registrologin
 
 
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.example.mensageiroinstantaneo.R
+import com.example.mensageiroinstantaneo.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 

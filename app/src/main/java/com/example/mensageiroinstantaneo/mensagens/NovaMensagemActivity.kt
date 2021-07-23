@@ -1,10 +1,13 @@
 package com.example.mensageiroinstantaneo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mensageiroinstantaneo.mensagens.ChatActivity
+import com.example.mensageiroinstantaneo.modelo.UsuarioDTO
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -13,7 +16,6 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import org.w3c.dom.Text
 
 class NovaMensagemActivity : AppCompatActivity() {
     lateinit var recycler : RecyclerView
@@ -27,6 +29,9 @@ class NovaMensagemActivity : AppCompatActivity() {
         buscaUsuarios()
     }
 
+    companion object{
+        val USER_KEY = "USER_KEY"
+    }
     private fun buscaUsuarios(){
         val database = FirebaseDatabase.getInstance().getReference("/usuarios")
 
@@ -40,6 +45,15 @@ class NovaMensagemActivity : AppCompatActivity() {
                     if(user != null){
                     adapter.add(ItemUsuario(user))
                     }
+                }
+                adapter.setOnItemClickListener { item, view ->
+                    val itemUsuario = item as ItemUsuario
+                    val intent = Intent(view.context, ChatActivity::class.java)
+                    //intent.putExtra(USER_KEY, itemUsuario.usuario.username)
+                    intent.putExtra(USER_KEY, itemUsuario.usuario)
+                    startActivity(intent)
+                    finish()
+
                 }
                 recycler.adapter = adapter
             }

@@ -1,4 +1,4 @@
-package com.example.mensageiroinstantaneo
+package com.example.mensageiroinstantaneo.utils
 
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity

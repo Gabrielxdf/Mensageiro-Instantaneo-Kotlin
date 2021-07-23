@@ -11,6 +11,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.mensageiroinstantaneo.mensagens.UltimasMensagensActivity
+import com.example.mensageiroinstantaneo.modelo.UsuarioDTO
+import com.example.mensageiroinstantaneo.registrologin.LoginActivity
+import com.example.mensageiroinstantaneo.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.database.FirebaseDatabase
@@ -159,7 +163,4 @@ class RegistroActivity : Utils() {
                 Log.d("Registro", "Falha ao salvar o usuário: ${it.message}")
             }
     }
-}
-class UsuarioDTO(val uid: String, val username : String, val fotoPerfil : String){
-    constructor() : this("","","")
 }

@@ -26,4 +26,5 @@
     <style name="Theme.MensageiroInstantaneo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MensageiroInstantaneo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

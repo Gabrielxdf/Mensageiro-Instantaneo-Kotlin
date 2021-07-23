@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp">
+
+    <ImageView
+        android:id="@+id/foto_chat_direita"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@android:drawable/ic_menu_my_calendar" />
+
+    <TextView
+        android:id="@+id/campo_linha_direita"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/mensagem_enviada"
+        android:maxWidth="250dp"
+        android:padding="16dp"
+        android:text="Minha mensagem vai quebrar em várias linhas se tiver um texto muito grande aqui."
+        app:layout_constraintEnd_toStartOf="@+id/foto_chat_direita"
+        app:layout_constraintTop_toTopOf="@+id/foto_chat_direita" />
+</androidx.constraintlayout.widget.ConstraintLayout>

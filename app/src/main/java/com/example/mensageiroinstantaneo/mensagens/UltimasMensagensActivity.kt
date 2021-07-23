@@ -1,11 +1,13 @@
-package com.example.mensageiroinstantaneo
+package com.example.mensageiroinstantaneo.mensagens
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.example.mensageiroinstantaneo.NovaMensagemActivity
+import com.example.mensageiroinstantaneo.R
+import com.example.mensageiroinstantaneo.RegistroActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class UltimasMensagensActivity : AppCompatActivity() {

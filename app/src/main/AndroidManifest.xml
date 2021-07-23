@@ -9,16 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MensageiroInstantaneo">
-        <activity android:name=".NovaMensagemActivity"
-            android:parentActivityName=".UltimasMensagensActivity"/>
-        <activity android:name=".UltimasMensagensActivity">
+        <activity android:name=".mensagens.ChatActivity"
+            android:parentActivityName=".mensagens.UltimasMensagensActivity"/>
+        <activity
+            android:name=".NovaMensagemActivity"
+            android:parentActivityName=".mensagens.UltimasMensagensActivity" />
+        <activity android:name=".mensagens.UltimasMensagensActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".registrologin.LoginActivity" />
         <activity android:name=".RegistroActivity" />
     </application>
 
