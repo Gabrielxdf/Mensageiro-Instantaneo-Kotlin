@@ -1,12 +1,14 @@
 package com.example.mensageiroinstantaneo.registrologin
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.example.mensageiroinstantaneo.R
+import com.example.mensageiroinstantaneo.mensagens.UltimasMensagensActivity
 import com.example.mensageiroinstantaneo.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -68,6 +70,9 @@ class LoginActivity : Utils() {
                         "LoginActivity", "Fez login com \n" +
                                 "E-mail: $email \n Senha: $senha"
                     )
+                    val intent = Intent(this, UltimasMensagensActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
             }
     }

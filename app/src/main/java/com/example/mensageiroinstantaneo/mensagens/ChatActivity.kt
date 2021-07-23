@@ -48,7 +48,7 @@ class ChatActivity : Utils() {
     }
 
     private fun listenerNovasMensagens(){
-        val ref = FirebaseDatabase.getInstance().getReference("/mensagens")
+        val ref = FirebaseDatabase.getInstance().getReference("/mensagens-usuarios/$usuarioLogadoId/${usuarioEscolhido.uid}")
         ref.addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val mensagemChat = snapshot.getValue(ChatDTO::class.java)
@@ -60,22 +60,17 @@ class ChatActivity : Utils() {
                     }
                 }
                 recycler.adapter = adapter
+                recycler.scrollToPosition(adapter.itemCount-1)
             }
 
+            //boilerplate
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
             }
-
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
             }
-
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
             }
-
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
             }
 
         })
@@ -91,10 +86,21 @@ class ChatActivity : Utils() {
             toast("Não foi possível enviar essa mensagem. \n Tente novamente mais tarde.")
             return
         }
-        val database = FirebaseDatabase.getInstance().getReference("/mensagens").push()
+        val database = FirebaseDatabase.getInstance().getReference("/mensagens-usuarios/$usuarioLogadoId/${usuarioEscolhido.uid}").push()
+        val toDatabase = FirebaseDatabase.getInstance().getReference("/mensagens-usuarios/${usuarioEscolhido.uid}/$usuarioLogadoId").push()
         val chatDto = ChatDTO(database.key, mensagem, usuarioLogadoId, usuarioEscolhido.uid, System.currentTimeMillis() / 1000)
         database.setValue(chatDto)
-        campoMensagem.text.clear()
+            .addOnSuccessListener {
+                toDatabase.setValue(chatDto)
+                campoMensagem.text.clear()
+                recycler.scrollToPosition(adapter.itemCount-1)
+            }
+        val ultimaMensagemDatabase = FirebaseDatabase.getInstance()
+            .getReference("/ultima-mensagem/$usuarioLogadoId/${usuarioEscolhido.uid}")
+        ultimaMensagemDatabase.setValue(chatDto)
+        val ultimaMensagemToDatabase = FirebaseDatabase.getInstance()
+            .getReference("/ultima-mensagem/${usuarioEscolhido.uid}/$usuarioLogadoId")
+        ultimaMensagemToDatabase.setValue(chatDto)
     }
 }
 

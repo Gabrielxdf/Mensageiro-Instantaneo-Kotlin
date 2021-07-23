@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mensageiroinstantaneo.mensagens.ChatActivity
 import com.example.mensageiroinstantaneo.modelo.UsuarioDTO
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -19,19 +20,20 @@ import com.xwray.groupie.Item
 
 class NovaMensagemActivity : AppCompatActivity() {
     lateinit var recycler : RecyclerView
+
+    companion object{
+        val USER_KEY = "USER_KEY"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nova_mensagem)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Selecione um usuário"
 
-
         buscaUsuarios()
     }
 
-    companion object{
-        val USER_KEY = "USER_KEY"
-    }
     private fun buscaUsuarios(){
         val database = FirebaseDatabase.getInstance().getReference("/usuarios")
 
@@ -42,14 +44,13 @@ class NovaMensagemActivity : AppCompatActivity() {
                 val adapter = GroupieAdapter()
                 snapshot.children.forEach {
                     val user = it.getValue(UsuarioDTO::class.java)
-                    if(user != null){
+                    if(user != null && user.uid != FirebaseAuth.getInstance().uid){
                     adapter.add(ItemUsuario(user))
                     }
                 }
                 adapter.setOnItemClickListener { item, view ->
                     val itemUsuario = item as ItemUsuario
                     val intent = Intent(view.context, ChatActivity::class.java)
-                    //intent.putExtra(USER_KEY, itemUsuario.usuario.username)
                     intent.putExtra(USER_KEY, itemUsuario.usuario)
                     startActivity(intent)
                     finish()

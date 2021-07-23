@@ -30,4 +30,5 @@
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/foto_chat_esquerda"
         app:layout_constraintTop_toTopOf="@+id/foto_chat_esquerda" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
