@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MensageiroInstantaneo">
         <activity android:name=".mensagens.ChatActivity"
-            android:parentActivityName=".mensagens.UltimasMensagensActivity"/>
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".mensagens.UltimasMensagensActivity" />
         <activity
             android:name=".NovaMensagemActivity"
             android:parentActivityName=".mensagens.UltimasMensagensActivity" />
@@ -21,8 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".registrologin.LoginActivity" />
-        <activity android:name=".RegistroActivity" />
+        <activity android:name=".registrologin.LoginActivity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".RegistroActivity"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>

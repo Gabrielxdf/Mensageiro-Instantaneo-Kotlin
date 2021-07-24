@@ -1,8 +1,10 @@
 package com.example.mensageiroinstantaneo.mensagens
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mensageiroinstantaneo.NovaMensagemActivity
@@ -10,6 +12,7 @@ import com.example.mensageiroinstantaneo.R
 import com.example.mensageiroinstantaneo.modelo.ChatDTO
 import com.example.mensageiroinstantaneo.modelo.UsuarioDTO
 import com.example.mensageiroinstantaneo.utils.Utils
+import com.google.android.material.internal.ContextUtils.getActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -101,6 +104,7 @@ class ChatActivity : Utils() {
         val ultimaMensagemToDatabase = FirebaseDatabase.getInstance()
             .getReference("/ultima-mensagem/${usuarioEscolhido.uid}/$usuarioLogadoId")
         ultimaMensagemToDatabase.setValue(chatDto)
+        //ItemUltimaMensagem.botaoNotificacaoFlag = false
     }
 }
 

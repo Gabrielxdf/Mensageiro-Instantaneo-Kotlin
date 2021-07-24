@@ -192,4 +192,5 @@ open class Utils : AppCompatActivity() {
         //se o retorno for null retorna o código da mensagem
         return retorno ?: return errorCode.message
     }
+
 }

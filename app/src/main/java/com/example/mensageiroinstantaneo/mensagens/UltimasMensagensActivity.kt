@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mensageiroinstantaneo.NovaMensagemActivity
 import com.example.mensageiroinstantaneo.R
@@ -23,17 +25,26 @@ import com.xwray.groupie.Item
 
 class UltimasMensagensActivity : AppCompatActivity() {
     lateinit var recycler : RecyclerView
-    //lateinit var botao_notificacao : Button
     val adapter = GroupieAdapter()
-
+    val ultimasMensagensHash = HashMap<String, ChatDTO>()
     companion object{
         lateinit var usuarioAtual : UsuarioDTO
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ultimas_mensagens)
+        supportActionBar?.title = "Mensageiro"
+        supportActionBar?.setIcon(R.drawable.chat);
         recycler = findViewById(R.id.recycler_ultimas_mensagens)
-        //botao_notificacao = findViewById(R.id.botao_notificacao)
+        recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        adapter.setOnItemClickListener { item, view ->
+            val itemUsuario = item as ItemUltimaMensagem
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra(NovaMensagemActivity.USER_KEY, itemUsuario.parceiroChat)
+            //ItemUltimaMensagem.botaoNotificacaoFlag = true
+            startActivity(intent)
+        }
         verificaUsuarioLogado()
         buscaUsuarioAtual()
         atualizaUltimasMensagens()
@@ -79,20 +90,14 @@ class UltimasMensagensActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-    val ultimasMensagensHash = HashMap<String, ChatDTO>()
-    private fun atualizaRecyclerView(){
-        adapter.clear()
-        ultimasMensagensHash.values.forEach{
-            adapter.add(ItemUltimaMensagem(it))
-        }
-    }
+
     private fun atualizaUltimasMensagens(){
         val uid = FirebaseAuth.getInstance().uid.toString()
         val database = FirebaseDatabase.getInstance().getReference("/ultima-mensagem/$uid")
         database.addChildEventListener(object : ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val mensagem = snapshot.getValue(ChatDTO::class.java) ?: return
-                    ultimasMensagensHash[snapshot.key!!] = mensagem
+                ultimasMensagensHash[snapshot.key!!] = mensagem
                 atualizaRecyclerView()
             }
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -106,18 +111,44 @@ class UltimasMensagensActivity : AppCompatActivity() {
             }
             override fun onCancelled(error: DatabaseError) {
             }
-
         })
         recycler.adapter = adapter
     }
+
+    private fun atualizaRecyclerView(){
+        adapter.clear()
+
+        ultimasMensagensHash.keys.forEach{
+            adapter.add(ItemUltimaMensagem(ultimasMensagensHash.getValue(it), it, null))
+        }
+    }
 }
 
-class ItemUltimaMensagem(val mensagem : ChatDTO) : Item<GroupieViewHolder>(){
+class ItemUltimaMensagem(val mensagem : ChatDTO, val chatPartner : String, var parceiroChat : UsuarioDTO?) : Item<GroupieViewHolder>(){
+    //companion object {
+        //var botaoNotificacaoFlag = false
+    //}
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.findViewById<TextView>(R.id.mensagem_usuario_ultima_mensagem).text = mensagem.text
-        //viewHolder.itemView.findViewById<TextView>(R.id.nome_usuario_nova_mensagem).text = usuario.username
-        //Picasso.get().load(usuario.fotoPerfil).into(viewHolder.itemView
-            //.findViewById<ImageView>(R.id.imagem_usuario_nova_mensagem))
+//        if (mensagem.fromId == chatPartner && !botaoNotificacaoFlag){
+//            viewHolder.itemView.findViewById<Button>(R.id.botao_notificacao).visibility = View.VISIBLE
+//        }
+        if (mensagem.fromId == chatPartner){
+            viewHolder.itemView.findViewById<Button>(R.id.botao_notificacao).visibility = View.VISIBLE
+        }
+        var userPartner : UsuarioDTO?
+        val ref = FirebaseDatabase.getInstance().getReference("/usuarios/$chatPartner")
+        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                userPartner = snapshot.getValue(UsuarioDTO::class.java)!!
+                parceiroChat = userPartner
+                viewHolder.itemView.findViewById<TextView>(R.id.mensagem_usuario_ultima_mensagem).text = mensagem.text
+                viewHolder.itemView.findViewById<TextView>(R.id.nome_usuario_ultima_mensagem).text = userPartner?.username
+                Picasso.get().load(userPartner?.fotoPerfil).into(viewHolder.itemView
+                    .findViewById<ImageView>(R.id.foto_usuario_ultima_mensagem))
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
     }
 
     override fun getLayout(): Int {
